@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grading System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 300px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            min-height: 1.5rem;
+        }
+        .fail {
+            color: #dc3545;
+        }
+        .pass {
+            color: #28a745;
+        }
+        .error {
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Student Grading</h2>
+    <label for="scoreInput" style="display:block; text-align:left; margin-bottom:5px; font-size:14px;">Enter Score (0-100):</label>
+    <input type="number" id="scoreInput" placeholder="e.g. 85">
+    <button onclick="calculateGrade()">Get Grade</button>
+    
+    <div id="result"></div>
+</div>
+
+<script>
+    function calculateGrade() {
+        const input = document.getElementById('scoreInput').value;
+        const resultDiv = document.getElementById('result');
+        
+        // Convert input to a number
+        const score = parseFloat(input);
+
+        // Clear previous results
+        resultDiv.className = ''; 
+        resultDiv.textContent = '';
+
+        // Validation: Check if input is empty or not a number
+        if (input === '' || isNaN(score)) {
+            resultDiv.textContent = "Please enter a valid number.";
+            resultDiv.className = 'error';
+            return;
+        }
+
+        // Validation: Check range 0-100
+        if (score < 0 || score > 100) {
+            resultDiv.textContent = "Error: Score must be between 0 and 100.";
+            resultDiv.className = 'error';
+            return;
+        }
+
+        // Grading Logic
+        let message = "";
+        let cssClass = "";
+
+        if (score < 30) {
+            message = "Fail";
+            cssClass = "fail";
+        } else if (score >= 90) {
+            message = "Grade: A (Excellent)";
+            cssClass = "pass";
+        } else if (score >= 80) {
+            message = "Grade: B (Good)";
+            cssClass = "pass";
+        } else if (score >= 70) {
+            message = "Grade: C (Average)";
+            cssClass = "pass";
+        } else if (score >= 60) {
+            message = "Grade: D (Below Average)";
+            cssClass = "pass";
+        } else {
+            // This covers scores from 30 to 59
+            message = "Grade: Pass (Marginal)";
+            cssClass = "pass";
+        }
+
+        // Display result
+        resultDiv.textContent = message;
+        resultDiv.className = cssClass;
+    }
+</script>
+
+</body>
+</html>
