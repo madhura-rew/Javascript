@@ -1,0 +1,184 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Shopping Cart Calculator</title>
+<style>
+body{
+	font-family:Arial;
+	background:#f2f2f2;
+}
+.container{
+	width:800px;
+	margin:30px auto;
+	background:white;
+	padding:20px;
+	border-radius:10px;
+	box-shadow:0 0 10px gray;
+}
+input{
+	padding:8px;
+	width:150px;
+	margin:5px;
+}
+button{
+	padding:10px 15px;
+	cursor:pointer;
+	background: #007bff;
+	color: white;
+	border: none;
+	border-radius: 4px;
+}
+button:hover { background: #0056b3; }
+table{
+	width:100%;
+	border-collapse:collapse;
+	margin-top:20px;
+}
+table,th,td{
+	border:1px solid black;
+}
+th{
+	background:#007bff;
+	color:white;
+}
+th,td{
+	padding:10px;
+	text-align:center;
+}
+.result{
+	margin-top:20px;
+	font-size:18px;
+	line-height: 1.6;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>Shopping Cart Calculator</h2>
+    <input type="text" id="name" placeholder="Product Name">
+    <input type="number" id="price" placeholder="Price">
+    <input type="number" id="qty" placeholder="Quantity">
+    <button onclick="addProduct()">Add Product</button>
+    
+    <!-- Added ID "cartTable" here -->
+    <table id="cartTable">
+        <tr>
+            <th>ID</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+    </table>
+    
+    <div class="result" id="result"></div>
+    
+    <h3>Item Summary</h3>
+    <ul id="summary"></ul>
+    
+    <h3>Expensive Products (Price > Rs.1000) </h3>
+    <ul id="expensive"></ul>
+</div> <!-- Added closing div tag -->
+
+<script>
+let cart = [];
+
+function addProduct(){
+    let name = document.getElementById("name").value;
+    let price = parseFloat(document.getElementById("price").value);
+    let qty = parseInt(document.getElementById("qty").value);
+
+    if(name === "" || isNaN(price) || isNaN(qty)) {
+        alert("Please enter all fields correctly");
+        return;
+    }
+
+    let product = {
+        id: cart.length + 1,
+        name: name,
+        price: price,
+        quantity: qty
+    };
+
+    cart.push(product);
+    displayCart();
+    
+    // Clear inputs
+    document.getElementById("name").value = "";
+    document.getElementById("price").value = "";
+    document.getElementById("qty").value = "";
+}
+
+function displayCart(){
+    let table = document.getElementById("cartTable");
+    
+    // Rebuild table header
+    let html = `
+        <tr>
+            <th>ID</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+    `;
+
+    // Fix: Use backticks and correct function name
+    cart.forEach(function(item){
+        html += `
+            <tr>
+                <td>${item.id}</td>
+                <td>${item.name}</td>
+                <td>Rs.${item.price}</td>
+                <td>${item.quantity}</td>
+                <td>Rs.${(item.price * item.quantity).toFixed(2)}</td>
+            </tr>
+        `;
+    });
+    
+    table.innerHTML = html;
+
+    // Calculate Totals
+    let total = cart.reduce(function(sum, item){
+        return sum + (item.price * item.quantity);
+    }, 0);
+
+    let discount = 0;
+    if(total >= 50000) discount = total * 0.20;
+    else if(total >= 20000) discount = total * 0.10;
+    else if(total >= 5000) discount = total * 0.05;
+
+    let finalAmount = total - discount;
+
+    // Fix: Use backticks and proper HTML tags
+    document.getElementById("result").innerHTML = `
+        <b>Total Amount:</b> Rs.${total.toFixed(2)}<br>
+        <b>Discount:</b> Rs.${discount.toFixed(2)}<br>
+        <b>Final Amount:</b> Rs.${finalAmount.toFixed(2)}
+    `;
+
+    // Fix: Summary loop was missing
+    let summary = document.getElementById("summary");
+    summary.innerHTML = "";
+    cart.forEach(function(item){
+        summary.innerHTML += `<li>${item.name} : Rs.${(item.price * item.quantity).toFixed(2)}</li>`;
+    });
+
+    // Fix: Expensive products logic
+    let expensiveList = document.getElementById("expensive");
+    expensiveList.innerHTML = "";
+    
+    // Filter items
+    let exp = cart.filter(function(item){
+        return item.price > 1000;
+    });
+
+    // Loop through filtered items
+    exp.forEach(function(item){
+        expensiveList.innerHTML += `<li>${item.name} (Rs.${item.price})</li>`;
+    });
+}
+</script>
+</body>
+</html>
