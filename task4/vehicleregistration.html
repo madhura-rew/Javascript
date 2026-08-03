@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vehicle Registration Validation</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background:#f2f2f2;
+        }
+
+        .container{
+            width:400px;
+            margin:100px auto;
+            background:white;
+            padding:25px;
+            border-radius:10px;
+            box-shadow:0 0 10px gray;
+            text-align:center;
+        }
+
+        h2{
+            color:#003366;
+        }
+
+        input{
+            width:90%;
+            padding:10px;
+            font-size:16px;
+            margin:15px 0;
+            border:1px solid gray;
+            border-radius:5px;
+            text-transform:uppercase;
+        }
+
+        button{
+            padding:10px 20px;
+            font-size:16px;
+            background:#007BFF;
+            color:white;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#0056b3;
+        }
+
+        #result{
+            margin-top:20px;
+            font-size:18px;
+            font-weight:bold;
+        }
+
+        .rules{
+            text-align:left;
+            font-size:14px;
+            color:#555;
+            margin-top:20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Vehicle Registration Validator</h2>
+
+    <input type="text" id="vehicle"
+    placeholder="Example: MH12AB1234"
+    maxlength="10">
+
+    <br>
+
+    <button onclick="validateVehicle()">Validate</button>
+
+    <p id="result"></p>
+
+    <div class="rules">
+        <b>Rules:</b>
+        <ul>
+            <li>Exactly 10 characters</li>
+            <li>First 2 letters → State Code (A-Z)</li>
+            <li>Next 2 digits → District Code</li>
+            <li>Next 2 letters → Series</li>
+            <li>Last 4 digits → Vehicle Number</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+
+function validateVehicle(){
+
+    let vehicle=document.getElementById("vehicle").value.toUpperCase();
+    document.getElementById("vehicle").value=vehicle;
+
+    let result=document.getElementById("result");
+
+    let pattern=/^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$/;
+
+    if(vehicle.length!=10)
+    {
+        result.innerHTML="❌ Vehicle number must contain exactly 10 characters.";
+        result.style.color="red";
+    }
+
+    else if(!pattern.test(vehicle))
+    {
+        result.innerHTML="❌ Invalid Vehicle Registration Number.";
+        result.style.color="red";
+    }
+
+    else
+    {
+        result.innerHTML="✅ Valid Vehicle Registration Number.";
+        result.style.color="green";
+    }
+
+}
+
+</script>
+
+</body>
+</html>
