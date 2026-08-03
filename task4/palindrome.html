@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palindrome Checker</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F4C2C2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        h2 {
+            margin-bottom: 1rem;
+            color: #333;ns
+        }
+
+        p.hint {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        input:focus {
+            border-color: #6c5ce7;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #FEA3AA;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #5a4ad1;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-weight: bold;
+            min-height: 24px;
+        }
+
+        .success {
+            color: #27ae60;
+        }
+
+        .error {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Palindrome Checker</h2>
+    <input type="text" id="userInput" placeholder="Enter a word...">
+    <button onclick="checkPalindrome()">Check</button>
+    <div id="result"></div>
+</div>
+
+<script>
+    function checkPalindrome() {
+        const inputField = document.getElementById('userInput');
+        const resultDiv = document.getElementById('result');
+        const value = inputField.value;
+
+        try {
+            // Rule 1: Check if input is empty
+            if (!value || value.trim() === "") {
+                throw new Error("Input cannot be empty.");
+            }
+
+            // Rule 2: Check if length is less than 3
+            // We check the raw input length here, or cleanStr.length if you prefer checking the processed string
+            if (value.length < 3) {
+                throw new Error("Input must be at least 3 characters long.");
+            }
+
+            // Logic: Clean the string (lowercase, remove non-alphanumeric)
+            const cleanStr = value.toLowerCase().replace(/[^a-z0-9]/g, '');
+            
+            // Additional check: Ensure cleaning didn't result in a short string
+            if (cleanStr.length < 3) {
+                 throw new Error("Alphanumeric characters must be at least 3.");
+            }
+
+            // Reverse the string
+            const reversedStr = cleanStr.split('').reverse().join('');
+
+            // Comparison
+            if (cleanStr === reversedStr) {
+                resultDiv.textContent = `"${value}" is a palindrome!`;
+                resultDiv.className = 'success';
+            } else {
+                resultDiv.textContent = `"${value}" is NOT a palindrome.`;
+                resultDiv.className = 'success';
+            }
+
+        } catch (error) {
+            // Handle any thrown errors
+            resultDiv.textContent = "Error: " + error.message;
+            resultDiv.className = 'error';
+            console.error(error);
+        }
+    }
+</script>
+
+</body>
+</html>
