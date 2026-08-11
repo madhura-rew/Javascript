@@ -1,184 +1,270 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Shopping Cart Calculator</title>
-<style>
-body{
-	font-family:Arial;
-	background:#f2f2f2;
-}
-.container{
-	width:800px;
-	margin:30px auto;
-	background:white;
-	padding:20px;
-	border-radius:10px;
-	box-shadow:0 0 10px gray;
-}
-input{
-	padding:8px;
-	width:150px;
-	margin:5px;
-}
-button{
-	padding:10px 15px;
-	cursor:pointer;
-	background: #007bff;
-	color: white;
-	border: none;
-	border-radius: 4px;
-}
-button:hover { background: #0056b3; }
-table{
-	width:100%;
-	border-collapse:collapse;
-	margin-top:20px;
-}
-table,th,td{
-	border:1px solid black;
-}
-th{
-	background:#007bff;
-	color:white;
-}
-th,td{
-	padding:10px;
-	text-align:center;
-}
-.result{
-	margin-top:20px;
-	font-size:18px;
-	line-height: 1.6;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Calculator</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f7f5ff;
+            margin: 0;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #5b3fd3;
+        }
+
+        .cart {
+            margin-top: 20px;
+        }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .coupon-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #faf9ff;
+            border-radius: 10px;
+        }
+
+        input {
+            padding: 10px;
+            width: 200px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #6846d9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .summary {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f1fff6;
+            border-radius: 10px;
+        }
+
+        .total {
+            font-size: 24px;
+            font-weight: bold;
+            color: #5b3fd3;
+        }
+
+        .discount {
+            color: green;
+        }
+    </style>
 </head>
+
 <body>
+
 <div class="container">
-    <h2>Shopping Cart Calculator</h2>
-    <input type="text" id="name" placeholder="Product Name">
-    <input type="number" id="price" placeholder="Price">
-    <input type="number" id="qty" placeholder="Quantity">
-    <button onclick="addProduct()">Add Product</button>
-    
-    <!-- Added ID "cartTable" here -->
-    <table id="cartTable">
-        <tr>
-            <th>ID</th>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Total</th>
-        </tr>
-    </table>
-    
-    <div class="result" id="result"></div>
-    
-    <h3>Item Summary</h3>
-    <ul id="summary"></ul>
-    
-    <h3>Expensive Products (Price > Rs.1000) </h3>
-    <ul id="expensive"></ul>
-</div> <!-- Added closing div tag -->
+
+    <h1>🛒 Your Cart</h1>
+    <p>Calculate cart total using JavaScript array methods</p>
+
+    <div id="cart" class="cart"></div>
+
+    <div class="coupon-section">
+
+        <h2>Apply Coupon</h2>
+
+        <input type="text" id="coupon" placeholder="Enter coupon code">
+
+        <button onclick="applyCoupon()">Apply</button>
+
+        <h3>Available Coupons</h3>
+
+        <p>FLAT100 - ₹100 OFF on orders above ₹999</p>
+        <p>SAVE10 - 10% OFF on orders above ₹1000</p>
+        <p>SAVE20 - 20% OFF on orders above ₹2000</p>
+        <p>FREESHIP - Free Shipping</p>
+
+    </div>
+
+    <div class="summary">
+
+        <h2>Order Summary</h2>
+
+        <p>Subtotal: ₹<span id="subtotal">0</span></p>
+
+        <p class="discount">
+            Discount: - ₹<span id="discount">0</span>
+        </p>
+
+        <p>
+            Shipping: ₹<span id="shipping">50</span>
+        </p>
+
+        <hr>
+
+        <p class="total">
+            Total: ₹<span id="total">0</span>
+        </p>
+
+        <p id="message"></p>
+
+    </div>
+
+</div>
+
 
 <script>
-let cart = [];
 
-function addProduct(){
-    let name = document.getElementById("name").value;
-    let price = parseFloat(document.getElementById("price").value);
-    let qty = parseInt(document.getElementById("qty").value);
+    // Array of objects
+    const cart = [
+        {
+            name: "T-Shirt",
+            price: 499,
+            quantity: 1
+        },
+        {
+            name: "Jeans",
+            price: 999,
+            quantity: 1
+        },
+        {
+            name: "Shoes",
+            price: 1299,
+            quantity: 1
+        }
+    ];
 
-    if(name === "" || isNaN(price) || isNaN(qty)) {
-        alert("Please enter all fields correctly");
-        return;
+
+    // Display cart items using map()
+    function displayCart() {
+
+        const cartDiv = document.getElementById("cart");
+
+        cartDiv.innerHTML = cart.map(item => `
+            <div class="item">
+                <span>${item.name}</span>
+                <span>₹${item.price} × ${item.quantity}</span>
+                <span>₹${item.price * item.quantity}</span>
+            </div>
+        `).join("");
+
     }
 
-    let product = {
-        id: cart.length + 1,
-        name: name,
-        price: price,
-        quantity: qty
-    };
 
-    cart.push(product);
+    // Calculate subtotal using reduce()
+    function calculateSubtotal() {
+
+        return cart.reduce(
+            (total, item) => total + (item.price * item.quantity),
+            0
+        );
+
+    }
+
+
+    // Apply coupon
+    function applyCoupon() {
+
+        const coupon = document
+            .getElementById("coupon")
+            .value
+            .toUpperCase();
+
+        const subtotal = calculateSubtotal();
+
+        let discount = 0;
+        let shipping = 50;
+
+
+        // Discount logic
+        if (coupon === "FLAT100" && subtotal >= 999) {
+
+            discount = 100;
+
+        }
+
+        else if (coupon === "SAVE10" && subtotal >= 1000) {
+
+            discount = subtotal * 0.10;
+
+        }
+
+        else if (coupon === "SAVE20" && subtotal >= 2000) {
+
+            discount = subtotal * 0.20;
+
+        }
+
+        else if (coupon === "FREESHIP") {
+
+            shipping = 0;
+
+        }
+
+        else if (coupon !== "") {
+
+            document.getElementById("message").innerHTML =
+                "Invalid coupon or minimum order value not reached.";
+
+        }
+
+
+        // Calculate final total
+        const total = subtotal - discount + shipping;
+
+
+        // Display results
+        document.getElementById("subtotal").innerText =
+            subtotal;
+
+        document.getElementById("discount").innerText =
+            discount;
+
+        document.getElementById("shipping").innerText =
+            shipping;
+
+        document.getElementById("total").innerText =
+            total;
+
+
+        if (discount > 0) {
+
+            document.getElementById("message").innerHTML =
+                "Coupon applied successfully!";
+
+        }
+
+        if (coupon === "FREESHIP") {
+
+            document.getElementById("message").innerHTML =
+                "Free shipping applied!";
+
+        }
+
+    }
+
+
+    // Initial display
     displayCart();
-    
-    // Clear inputs
-    document.getElementById("name").value = "";
-    document.getElementById("price").value = "";
-    document.getElementById("qty").value = "";
-}
 
-function displayCart(){
-    let table = document.getElementById("cartTable");
-    
-    // Rebuild table header
-    let html = `
-        <tr>
-            <th>ID</th>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Total</th>
-        </tr>
-    `;
-
-    // Fix: Use backticks and correct function name
-    cart.forEach(function(item){
-        html += `
-            <tr>
-                <td>${item.id}</td>
-                <td>${item.name}</td>
-                <td>Rs.${item.price}</td>
-                <td>${item.quantity}</td>
-                <td>Rs.${(item.price * item.quantity).toFixed(2)}</td>
-            </tr>
-        `;
-    });
-    
-    table.innerHTML = html;
-
-    // Calculate Totals
-    let total = cart.reduce(function(sum, item){
-        return sum + (item.price * item.quantity);
-    }, 0);
-
-    let discount = 0;
-    if(total >= 50000) discount = total * 0.20;
-    else if(total >= 20000) discount = total * 0.10;
-    else if(total >= 5000) discount = total * 0.05;
-
-    let finalAmount = total - discount;
-
-    // Fix: Use backticks and proper HTML tags
-    document.getElementById("result").innerHTML = `
-        <b>Total Amount:</b> Rs.${total.toFixed(2)}<br>
-        <b>Discount:</b> Rs.${discount.toFixed(2)}<br>
-        <b>Final Amount:</b> Rs.${finalAmount.toFixed(2)}
-    `;
-
-    // Fix: Summary loop was missing
-    let summary = document.getElementById("summary");
-    summary.innerHTML = "";
-    cart.forEach(function(item){
-        summary.innerHTML += `<li>${item.name} : Rs.${(item.price * item.quantity).toFixed(2)}</li>`;
-    });
-
-    // Fix: Expensive products logic
-    let expensiveList = document.getElementById("expensive");
-    expensiveList.innerHTML = "";
-    
-    // Filter items
-    let exp = cart.filter(function(item){
-        return item.price > 1000;
-    });
-
-    // Loop through filtered items
-    exp.forEach(function(item){
-        expensiveList.innerHTML += `<li>${item.name} (Rs.${item.price})</li>`;
-    });
-}
 </script>
+
 </body>
 </html>
