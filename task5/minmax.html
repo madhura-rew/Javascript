@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find Minimum and Maximum</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: white;
+        }
+
+        h1 {
+            font-size: 40px;
+            color: #1f2937;
+            margin-top: 50px;
+        }
+
+        .container {
+            width: 60%;
+            margin: auto;
+            padding: 30px;
+            border: 2px solid #ddd;
+            border-radius: 15px;
+        }
+
+        .items {
+            font-size: 25px;
+            line-height: 1.8;
+        }
+
+        button {
+            background-color: #16a34a;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #15803d;
+        }
+
+        #result {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 2px solid #eee;
+            font-size: 25px;
+        }
+
+        .label {
+            color: #159447;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Find Minimum and Maximum</h1>
+
+    <div class="container">
+
+        <div class="items" id="items"></div>
+
+        <button onclick="findMinMax()">Find Min & Max</button>
+
+        <div id="result"></div>
+
+    </div>
+
+    <script>
+
+        // Array of objects
+        let products = [
+            { name: "Pen", price: 20 },
+            { name: "Notebook", price: 80 },
+            { name: "Bag", price: 500 },
+            { name: "Bottle", price: 150 },
+            { name: "Pencil", price: 10 }
+        ];
+
+        // Display products
+        document.getElementById("items").innerHTML =
+            products.map(item =>
+                `${item.name} - ₹${item.price}`
+            ).join("<br>");
+
+        function findMinMax() {
+
+            // Find minimum using reduce()
+            let minimum = products.reduce((min, item) =>
+                item.price < min.price ? item : min
+            );
+
+            // Find maximum using reduce()
+            let maximum = products.reduce((max, item) =>
+                item.price > max.price ? item : max
+            );
+
+            // Display result
+            document.getElementById("result").innerHTML = `
+                <p>
+                    <span class="label">Minimum:</span>
+                    ${minimum.name} - ₹${minimum.price}
+                </p>
+
+                <p>
+                    <span class="label">Maximum:</span>
+                    ${maximum.name} - ₹${maximum.price}
+                </p>
+            `;
+        }
+
+    </script>
+
+</body>
+</html>
