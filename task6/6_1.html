@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>String Methods and Regular Expressions</title>
+<style>
+	body {
+		font-family: Arial, sans-serif;
+		margin: 40px;
+	}
+	h1 {
+		text-align: center;
+	}
+	.box {
+		/* Fixed: 'solic' -> 'solid' */
+		border: 1px solid #ccc;
+		padding: 20px;
+		margin-top: 20px;
+		border-radius: 8px;
+	}
+	input, textarea, button {
+		padding: 10px;
+		margin: 5px 0;
+		width: 90%;
+	}
+	button {
+		width: 150px;
+		cursor: pointer;
+	}
+	#output {
+		margin-top: 20px;
+		padding: 15px;
+		background-color: #fbd9d9;
+	}
+</style>
+</head>
+
+<body>
+	<h1>String Methods and Regular Expressions</h1>
+	<div class="box">
+		<label><b>Enter a Paragraph:</b></label><br>
+		<textarea id="paragraph" rows="5">JavaScript is a powerful programming language. It is widely used for web development.</textarea>
+		<br>
+		<label><b>Enter Email:</b></label><br>
+		<input type="text" id="email" placeholder="enter your email">
+		<br>
+		<button onclick="processString()">Process</button>
+		<div id="output"></div>
+	</div> 
+
+	<script>
+		function processString() {
+			let paragraph = document.getElementById("paragraph").value;
+			let email = document.getElementById("email").value;
+
+			// 1. split()
+			let words = paragraph.split(/\s+/);
+
+			// 2. match()
+			let vowels = paragraph.match(/[aeiou]/gi);
+			let vowelCount = vowels ? vowels.length : 0;
+
+			// 3. replace()
+			let replacedParagraph = paragraph.replace(/JavaScript/gi, "JavaScript programming");
+
+			// 4. indexOf()
+			let searchWord = "powerful";
+			let position = paragraph.indexOf(searchWord);
+
+			// 5. Regular Expression - EMAIL VERIFICATION
+			let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+			let emailResult;
+			if (emailRegex.test(email)) {
+				emailResult = "Valid Email Address";
+			} else {
+				emailResult = "Invalid Email Address";
+			}
+
+			// 6. Regex - extract email from text
+			// FIXED: Variable name consistency (emailText)
+			let emailText = "for queries contact stu@example.com or admin0@college.in";
+			// FIXED: Removed ^ anchor (it only matches start of string) and fixed variable name (emailText)
+			let extractedEmails = emailText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g);
+
+			// 7. Reverse
+			let reversedPara = paragraph.split("").reverse().join("");
+
+			// Output results
+			let outputHTML = `
+				<h3>1. Original Paragraph</h3>
+				<p>${paragraph}</p>
+
+				<h3>2. Split into Words</h3>
+				<p>${words.join(", ")}</p>
+				<p>Word Count: ${words.length}</p>
+
+				<h3>3. Vowel Count</h3>
+				<p>${vowelCount} vowels found</p>
+				<p>Vowels: ${vowels ? vowels.join(", ") : "None"}</p>
+
+				<h3>4. Replace "JavaScript" with "JavaScript programming"</h3>
+				<p>${replacedParagraph}</p>
+
+				<h3>5. Search for "powerful"</h3>
+				<p>Position: ${position >= 0 ? position : "Not found"}</p>
+
+				<h3>6. Email Validation</h3>
+				<p>Entered Email: ${email}</p>
+				<p>Result: ${emailResult}</p>
+
+				<h3>7. Extract Emails from Sample Text</h3>
+				<p>Sample Text: "${emailText}"</p>
+				<p>Extracted Emails: ${extractedEmails ? extractedEmails.join(", ") : "None"}</p>
+
+				<h3>8. Reversed Paragraph</h3>
+				<p>${reversedPara}</p>
+			`;
+
+			document.getElementById("output").innerHTML = outputHTML;
+		}
+	</script>
+</body>
+</html>
