@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0,123,255,0.3);
+    }
+    
+    input:invalid:not(:placeholder-shown) {
+      border-color: #dc3545;
+    }
+    
+    input:valid:not(:placeholder-shown) {
+      border-color: #28a745;
+    }
+    
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .checkbox-container input {
+      width: auto;
+      margin-bottom: 0;
+    }
+    
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #0056b3;
+    }
+    
+    .error-message {
+      color: #dc3545;
+      font-size: 12px;
+      margin-top: 5px;
+      display: none;
+    }
+    
+    .error-message.visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <form id="signupForm">
+    <h2 style="text-align: center; color: #333; margin-bottom: 30px;">Sign Up</h2>
+    
+    <label for="firstName">First Name:</label>
+    <input type="text" id="firstName" name="firstName" placeholder="Enter first name" required>
+    <span class="error-message" id="firstName-error"></span>
+    
+    <label for="lastName">Last Name:</label>
+    <input type="text" id="lastName" name="lastName" placeholder="Enter last name" required>
+    <span class="error-message" id="lastName-error"></span>
+    
+    <label for="birthday">Birthday:</label>
+    <input type="date" id="birthday" name="birthday" required>
+    <span class="error-message" id="birthday-error"></span>
+    
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username" placeholder="Choose a username" required>
+    <span class="error-message" id="username-error"></span>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+    <span class="error-message" id="email-error"></span>
+    
+    <label for="website">Website:</label>
+    <input type="url" id="website" name="website" placeholder="https://example.com">
+    <span class="error-message" id="website-error"></span>
+    
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" placeholder="Create a password" required>
+    <span class="error-message" id="password-error"></span>
+    
+    <label for="confirmPassword">Re-type Password:</label>
+    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Re-enter password" required>
+    <span class="error-message" id="confirmPassword-error"></span>
+    
+    <div class="checkbox-container">
+      <input type="checkbox" id="terms" name="terms" required>
+      <label for="terms" style="margin-bottom: 0;">I agree to the terms and conditions</label>
+    </div>
+    <span class="error-message" id="terms-error"></span>
+    
+    <button type="submit">Sign Up</button>
+  </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('signupForm');
+      
+      // Field References
+      const firstName = document.getElementById('firstName');
+      const lastName = document.getElementById('lastName');
+      const birthday = document.getElementById('birthday');
+      const username = document.getElementById('username');
+      const email = document.getElementById('email');
+      const website = document.getElementById('website');
+      const password = document.getElementById('password');
+      const confirmPassword = document.getElementById('confirmPassword');
+      const terms = document.getElementById('terms');
+
+      // Helper: Set custom error message with visual feedback
+      const setError = (field, errorId, message) => {
+        field.setCustomValidity(message);
+        const errorElement = document.getElementById(errorId);
+        if (errorElement) {
+          errorElement.textContent = message;
+          errorElement.classList.add('visible');
+        }
+        field.classList.add('error');
+        field.reportValidity();
+      };
+
+      // Helper: Clear error
+      const clearError = (field, errorId) => {
+        field.setCustomValidity('');
+        const errorElement = document.getElementById(errorId);
+        if (errorElement) {
+          errorElement.textContent = '';
+          errorElement.classList.remove('visible');
+        }
+        field.classList.remove('error');
+      };
+
+      // 1. Real-time validation for First Name and Last Name (min length)
+      [firstName, lastName].forEach(field => {
+        const errorId = field.id + '-error';
+        
+        field.addEventListener('input', () => {
+          if (field.value.trim().length < 2) {
+            setError(field, errorId, 'Name must be at least 2 characters.');
+          } else {
+            clearError(field, errorId);
+          }
+        });
+        
+        field.addEventListener('blur', () => {
+          if (field.value.trim().length > 0 && field.value.trim().length < 2) {
+            setError(field, errorId, 'Name must be at least 2 characters.');
+          } else {
+            clearError(field, errorId);
+          }
+        });
+      });
+
+      // 2. Birthday validation (cannot be in the future)
+      birthday.addEventListener('change', () => {
+        const birthDate = new Date(birthday.value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Normalize to midnight
+        
+        if (birthDate > today) {
+          setError(birthday, 'birthday-error', 'Birthday cannot be in the future.');
+        } else {
+          clearError(birthday, 'birthday-error');
+        }
+      });
+
+      // 3. Username validation (alphanumeric only, min length)
+      username.addEventListener('blur', () => {
+        const pattern = /^[a-zA-Z0-9_]+$/;
+        if (username.value.trim() === '') {
+          clearError(username, 'username-error');
+          return;
+        }
+        
+        if (!pattern.test(username.value)) {
+          setError(username, 'username-error', 'Username can only contain letters, numbers, and underscores.');
+        } else if (username.value.length < 3) {
+          setError(username, 'username-error', 'Username must be at least 3 characters.');
+        } else {
+          clearError(username, 'username-error');
+        }
+      });
+
+      // 4. Email validation (using HTML5 type="email" + custom check)
+      email.addEventListener('blur', () => {
+        if (!email.checkValidity() || email.value.trim() === '') {
+          setError(email, 'email-error', 'Please enter a valid email address.');
+        } else {
+          clearError(email, 'email-error');
+        }
+      });
+
+      // 5. Website validation (must start with http/https or be empty)
+      website.addEventListener('blur', () => {
+        if (website.value.trim() !== '' && 
+            !website.value.startsWith('http://') && 
+            !website.value.startsWith('https://')) {
+          setError(website, 'website-error', 'Website must start with http:// or https://');
+        } else {
+          clearError(website, 'website-error');
+        }
+      });
+
+      // 6. Password and Confirm Password matching
+      password.addEventListener('input', () => {
+        if (confirmPassword.value && password.value !== confirmPassword.value) {
+          setError(confirmPassword, 'confirmPassword-error', 'Passwords do not match.');
+        } else {
+          clearError(confirmPassword, 'confirmPassword-error');
+        }
+        
+        // Password strength indicator (optional)
+        if (password.value.length < 8) {
+          setError(password, 'password-error', 'Password must be at least 8 characters.');
+        } else {
+          clearError(password, 'password-error');
+        }
+      });
+
+      confirmPassword.addEventListener('input', () => {
+        if (confirmPassword.value && password.value !== confirmPassword.value) {
+          setError(confirmPassword, 'confirmPassword-error', 'Passwords do not match.');
+        } else {
+          clearError(confirmPassword, 'confirmPassword-error');
+        }
+      });
+
+      // 7. Terms Checkbox validation on change
+      terms.addEventListener('change', () => {
+        if (!terms.checked) {
+          setError(terms, 'terms-error', 'You must agree to the terms.');
+        } else {
+          clearError(terms, 'terms-error');
+        }
+      });
+
+      // 8. Form Submission (Final Check)
+      form.addEventListener('submit', (e) => {
+        e.preventDefault(); // Stop default submission
+        
+        // Force browser to show all validation messages
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        // If we are here, all validation passed
+        alert(`Success!\nWelcome, ${firstName.value} ${lastName.value}.`);
+        
+        // Here you would typically send data to a server
+        // For now, log the data
+        const formData = {
+          firstName: firstName.value,
+          lastName: lastName.value,
+          birthday: birthday.value,
+          username: username.value,
+          email: email.value,
+          website: website.value,
+          password: password.value, // In real app, never send passwords in plain text
+          terms: terms.checked
+        };
+        
+        console.log('Form submitted successfully:', formData);
+        
+        // Reset form after successful submission
+        form.reset();
+        
+        // Clear all errors
+        document.querySelectorAll('.error-message').forEach(error => {
+          error.textContent = '';
+          error.classList.remove('visible');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
