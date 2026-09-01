@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic JS Signup Form</title>
+    <style>
+        /* Basic CSS Reset and Body Styling */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Container Styling */
+        #signup-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Form Element Styling */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+        }
+
+        /* Error Styling */
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none; /* Hidden by default */
+        }
+
+        input.invalid {
+            border-color: #dc3545;
+        }
+
+        input.invalid + .error-message {
+            display: block;
+        }
+
+        /* Button Styling */
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Success State */
+        button.success {
+            background-color: #28a745;
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- The container where JS will inject the form -->
+    <div id="signup-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('signup-container');
+
+            // 1. CREATE HTML STRUCTURE VIA JAVASCRIPT
+            const form = document.createElement('form');
+            form.id = 'dynamic-signup';
+            form.setAttribute('novalidate', 'true'); // Prevent default browser validation
+
+            // Helper to create input groups
+            const createInputGroup = (id, label, type, placeholder) => {
+                const div = document.createElement('div');
+                div.className = 'form-group';
+
+                const lbl = document.createElement('label');
+                lbl.htmlFor = id;
+                lbl.textContent = label;
+
+                const inp = document.createElement('input');
+                inp.type = type;
+                inp.id = id;
+                inp.name = id;
+                inp.placeholder = placeholder;
+
+                const err = document.createElement('span');
+                err.className = 'error-message';
+                err.id = `${id}-error`;
+
+                div.appendChild(lbl);
+                div.appendChild(inp);
+                div.appendChild(err);
+                return div;
+            };
+
+            // Add fields
+            form.appendChild(createInputGroup('username', 'Full Name', 'text', 'e.g. John Doe'));
+            form.appendChild(createInputGroup('email', 'Email Address', 'email', 'e.g. john@example.com'));
+            form.appendChild(createInputGroup('password', 'Password', 'password', 'Min 6 characters'));
+            form.appendChild(createInputGroup('confirmPassword', 'Confirm Password', 'password', 'Re-enter password'));
+
+            // Add Submit Button
+            const btn = document.createElement('button');
+            btn.type = 'submit';
+            btn.textContent = 'Create Account';
+            form.appendChild(btn);
+
+            container.appendChild(form);
+
+            // 2. SELECT ELEMENTS
+            const username = document.getElementById('username');
+            const email = document.getElementById('email');
+            const password = document.getElementById('password');
+            const confirm = document.getElementById('confirmPassword');
+            const submitBtn = document.querySelector('#dynamic-signup button');
+            const inputs = [username, email, password, confirm];
+
+            // 3. VALIDATION FUNCTIONS
+            const validateEmail = (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+            
+            const setError = (input, msg) => {
+                const errorSpan = document.getElementById(`${input.id}-error`);
+                input.classList.add('invalid');
+                errorSpan.textContent = msg;
+            };
+
+            const clearError = (input) => {
+                const errorSpan = document.getElementById(`${input.id}-error`);
+                input.classList.remove('invalid');
+                errorSpan.textContent = '';
+            };
+
+            const isFormValid = () => {
+                let valid = true;
+
+                // Username Check
+                if (username.value.trim() === '') {
+                    setError(username, 'Name is required');
+                    valid = false;
+                } else {
+                    clearError(username);
+                }
+
+                // Email Check
+                if (email.value.trim() === '') {
+                    setError(email, 'Email is required');
+                    valid = false;
+                } else if (!validateEmail(email.value)) {
+                    setError(email, 'Invalid email format');
+                    valid = false;
+                } else {
+                    clearError(email);
+                }
+
+                // Password Check
+                if (password.value.length < 6) {
+                    setError(password, 'Password must be at least 6 chars');
+                    valid = false;
+                } else {
+                    clearError(password);
+                }
+
+                // Confirm Password Check
+                if (confirm.value !== password.value) {
+                    setError(confirm, 'Passwords do not match');
+                    valid = false;
+                } else {
+                    clearError(confirm);
+                }
+
+                return valid;
+            };
+
+            // 4. EVENT LISTENERS
+
+            // a) Focus Event: Clear errors when user clicks into a field
+            inputs.forEach(input => {
+                input.addEventListener('focus', () => {
+                    clearError(input);
+                    console.log(`Focus: ${input.id}`);
+                });
+
+                // b) Change/Blur Event: Validate individual field
+                input.addEventListener('change', () => {
+                    // Simple immediate validation for better UX
+                    if (input === username && input.value.trim() === '') setError(username, 'Name required');
+                    if (input === email && !validateEmail(input.value)) setError(email, 'Invalid email');
+                    if (input === password && input.value.length < 6) setError(password, 'Too short');
+                    if (input === confirm && input.value !== password.value) setError(confirm, 'Mismatch');
+                });
+            });
+
+            // c) Submit Event: Main validation logic
+            form.addEventListener('submit', (e) => {
+                e.preventDefault(); // Stop page reload
+
+                // Trigger Custom Event: 'customValidationCheck'
+                const customEvent = new Event('customValidationCheck');
+                form.dispatchEvent(customEvent);
+
+                if (isFormValid()) {
+                    // Success Logic
+                    submitBtn.textContent = 'Account Created!';
+                    submitBtn.classList.add('success');
+                    submitBtn.disabled = true;
+
+                    // Trigger Custom Event with Data: 'signupComplete'
+                    const successEvent = new CustomEvent('signupComplete', {
+                        detail: {
+                            user: username.value,
+                            email: email.value
+                        }
+                    });
+                    document.dispatchEvent(successEvent);
+
+                    console.log('Form is valid. Submitting...');
+                    
+                    // Reset after 2 seconds
+                    setTimeout(() => {
+                        form.reset();
+                        submitBtn.textContent = 'Create Account';
+                        submitBtn.classList.remove('success');
+                        submitBtn.disabled = false;
+                    }, 2000);
+                } else {
+                    console.log('Validation failed.');
+                }
+            });
+
+            // 5. LISTENERS FOR CUSTOM EVENTS
+            form.addEventListener('customValidationCheck', () => {
+                console.log('>>> Custom Event Triggered: Pre-submission check started.');
+                // You could add extra logic here, e.g., checking API availability
+            });
+
+            document.addEventListener('signupComplete', (e) => {
+                console.log(`>>> Custom Event Received: User ${e.detail.user} registered successfully.`);
+                alert(`Welcome, ${e.detail.user}! Check the console for event details.`);
+            });
+        });
+    </script>
+</body>
+</html>
