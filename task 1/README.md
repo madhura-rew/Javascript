@@ -226,13 +226,29 @@ function externalGreeting() {
 ---
 
 ### 7. Output:
-**Screenshot/Output Description:**
+
+#### **Screenshots:**
+
+**Screenshot 1: Initial Page Load**
+![Initial page load showing registration form](https://github.com/madhura-rew/Javascript/raw/main/task%201/screenshot1.png)
 - Web page displays "Department of Computer Science" header with SIT Nagpur branding
+- Navigation link to Student Information Page
+- Welcome button ready for interaction
+- Empty Student Registration form with three input fields
+
+**Screenshot 2: Welcome Alert (Inline JavaScript)**
+![Welcome alert popup demonstrating inline JavaScript](https://github.com/madhura-rew/Javascript/raw/main/task%201/screenshot2.png)
 - Welcome button triggers alert popup with "Welcome to SIT Nagpur!" message
-- Student registration form with three input fields
-- "Add Student" button processes form submission
-- Registered Students table displays dynamically added entries with Name, Roll No, and Course columns
-- Console displays "External JavaScript file loaded successfully." message
+- Demonstrates inline JavaScript execution via `onclick` attribute
+- User interaction with the alert confirmation
+
+**Screenshot 3: Student Registration with Dynamic Data**
+![Registered student data in table demonstrating internal JavaScript](https://github.com/madhura-rew/Javascript/raw/main/task%201/screenshot3.png)
+- Registered Students table displays dynamically added entries
+- Shows student entry: Name: "Madhura", Roll No: "37", Course: "Btech"
+- Demonstrates successful form validation and dynamic DOM manipulation
+- Input fields cleared after submission (Internal JavaScript)
+- Console displays "External JavaScript file loaded successfully." message (External JavaScript)
 
 ---
 
