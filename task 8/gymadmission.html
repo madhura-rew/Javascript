@@ -1,0 +1,343 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Gym Admission Form</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #16a34a;
+            --error: #dc2626;
+            --bg: #f3f4f6;
+            --card: #ffffff;
+            --text: #1f2937;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .form-container {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            box-sizing: border-box; /* Ensures padding doesn't break layout */
+        }
+
+        /* Focus State */
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+
+        /* Validation States */
+        input.valid {
+            border-color: var(--success);
+        }
+        
+        input.invalid {
+            border-color: var(--error);
+        }
+
+        /* Error Message Styling */
+        .error-message {
+            color: var(--error);
+            font-size: 0.8rem;
+            margin-top: 0.4rem;
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.3s ease;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* Success Message Styling */
+        .success-message {
+            color: var(--success);
+            font-size: 0.8rem;
+            margin-top: 0.4rem;
+            display: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #1d4ed8;
+        }
+
+        button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Gym Admission</h2>
+    <form id="gymForm" novalidate>
+        
+        <!-- Full Name -->
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" required autocomplete="name">
+            <div class="error-message" id="fullNameError">Name must be at least 2 characters.</div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" required autocomplete="email">
+            <div class="error-message" id="emailError">Please enter a valid email address.</div>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" placeholder="10 digits only" required>
+            <div class="error-message" id="phoneError">Phone must be exactly 10 digits.</div>
+        </div>
+
+        <!-- Membership Type -->
+        <div class="form-group">
+            <label for="membership">Membership Type</label>
+            <select id="membership" name="membership" required>
+                <option value="" disabled selected>Select a plan</option>
+                <option value="basic">Basic</option>
+                <option value="standard">Standard </option>
+                <option value="premium">Premium </option>
+            </select>
+            <div class="error-message" id="membershipError">Please select a membership plan.</div>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+            <label for="password">Create Password</label>
+            <input type="password" id="password" name="password" required>
+            <div class="error-message" id="passwordError">
+                Password must be 8+ chars, include a number and uppercase letter.
+            </div>
+            <div class="success-message" id="passwordStrength">Password looks good!</div>
+        </div>
+
+        <button type="submit" id="submitBtn">Join the Gym</button>
+    </form>
+</div>
+
+<script>
+    // DOM Elements
+    const form = document.getElementById('gymForm');
+    const inputs = form.querySelectorAll('input, select');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Event Listeners for Live Validation
+    inputs.forEach(input => {
+        // 1. 'input' event: Triggers every character typed
+        input.addEventListener('input', (e) => {
+            validateField(e.target);
+            checkFormValidity(); // Re-check overall form state
+        });
+
+        // 2. 'blur' event: Triggers when user leaves the field
+        input.addEventListener('blur', (e) => {
+            validateField(e.target);
+            checkFormValidity();
+        });
+    });
+
+    // Form Submission Handler
+    form.addEventListener('submit', (e) => {
+        e.preventDefault(); // Stop page reload
+        
+        // Final validation check
+        let isValid = true;
+        inputs.forEach(input => {
+            if (!input.checkValidity()) {
+                isValid = false;
+                // Trigger blur to show errors if not already visible
+                input.dispatchEvent(new Event('blur'));
+            }
+        });
+
+        if (isValid) {
+            submitBtn.textContent = 'Processing...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call
+            setTimeout(() => {
+                alert('Form submitted successfully! Welcome to the gym.');
+                form.reset();
+                submitBtn.textContent = 'Join the Gym';
+                submitBtn.disabled = false;
+                // Clear all validation styles
+                inputs.forEach(i => {
+                    i.classList.remove('valid', 'invalid');
+                    const msg = i.nextElementSibling;
+                    if(msg && msg.classList.contains('error-message')) {
+                        msg.classList.remove('show');
+                    }
+                });
+            }, 1000);
+        }
+    });
+
+    /**
+     * Validates a single field based on its ID
+     */
+    function validateField(field) {
+        const id = field.id;
+        const value = field.value.trim();
+        const errorDiv = document.getElementById(`${id}Error`);
+        const successDiv = document.getElementById(`${id}Strength`); // Specific for password
+
+        // Reset classes first
+        field.classList.remove('valid', 'invalid');
+        if (errorDiv) errorDiv.classList.remove('show');
+        if (successDiv) successDiv.style.display = 'none';
+
+        // --- Specific Validation Logic ---
+        
+        switch(id) {
+            case 'fullName':
+                if (value.length < 2) {
+                    showFieldError(field, errorDiv);
+                    return false;
+                }
+                break;
+
+            case 'email':
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(value)) {
+                    showFieldError(field, errorDiv);
+                    return false;
+                }
+                break;
+
+            case 'phone':
+                const phoneRegex = /^\d{10}$/;
+                if (!phoneRegex.test(value)) {
+                    showFieldError(field, errorDiv);
+                    return false;
+                }
+                break;
+
+            case 'membership':
+                if (value === "") {
+                    showFieldError(field, errorDiv);
+                    return false;
+                }
+                break;
+
+            case 'password':
+                const passRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+                if (value.length > 0) {
+                    if (!passRegex.test(value)) {
+                        showFieldError(field, errorDiv);
+                        return false;
+                    } else {
+                        // Success case for password
+                        field.classList.add('valid');
+                        if (successDiv) {
+                            successDiv.style.display = 'block';
+                        }
+                        return true;
+                    }
+                }
+                break;
+        }
+
+        // If field is valid (and not empty for required fields)
+        if (value.length > 0) {
+            field.classList.add('valid');
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Helper to show error message and styling
+     */
+    function showFieldError(field, errorElement) {
+        field.classList.add('invalid');
+        if (errorElement) {
+            errorElement.classList.add('show');
+        }
+    }
+
+    /**
+     * Checks if ALL fields are valid to enable/disable submit button
+     */
+    function checkFormValidity() {
+        let allValid = true;
+        inputs.forEach(input => {
+            if (!input.validity.valid) {
+                allValid = false;
+            }
+        });
+        
+        // Optional: Disable button until valid (or keep enabled and validate on submit)
+        // Here we keep it enabled but visual cues are handled by the red borders
+    }
+</script>
+
+</body>
+</html>
