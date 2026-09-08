@@ -514,9 +514,10 @@ The complete source code is contained in the `index.html` file within this direc
 
 
 ## 7. Output
-*(Note to Student: Paste a second screenshot here showing the discount applied)*
 
-![Discount Applied Output](./Screenshot 2026-09-08 135347.png)
+
+<img width="1106" height="726" alt="Screenshot 2026-09-08 135347" src="https://github.com/user-attachments/assets/3da62f97-5875-4a79-a841-4f60cd100acd" />
+
 *File Path: `Javascript/task2/index.html`*
 
 ## 8. Result/Conclusion
