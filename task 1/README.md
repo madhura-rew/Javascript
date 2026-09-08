@@ -1,5 +1,4 @@
 # SYMBIOSIS INSTITUTE OF TECHNOLOGY, NAGPUR
-## For Soft Copy Submission
 
 ---
 
@@ -230,20 +229,23 @@ function externalGreeting() {
 #### **Screenshots:**
 
 **Screenshot 1: Initial Page Load**
-![Initial page load showing registration form](https://github.com/madhura-rew/Javascript/raw/main/task%201/screenshot1.png)
+<img width="967" height="609" alt="Screenshot 2026-09-01 144640" src="https://github.com/user-attachments/assets/015106c0-703e-44e2-b3ad-7dd542426695" />
+
 - Web page displays "Department of Computer Science" header with SIT Nagpur branding
 - Navigation link to Student Information Page
 - Welcome button ready for interaction
 - Empty Student Registration form with three input fields
 
 **Screenshot 2: Welcome Alert (Inline JavaScript)**
-![Welcome alert popup demonstrating inline JavaScript](https://github.com/madhura-rew/Javascript/raw/main/task%201/screenshot2.png)
+<img width="844" height="615" alt="Screenshot 2026-09-01 144651" src="https://github.com/user-attachments/assets/3f63e08a-b32c-47a0-b470-52fdd8bbac10" />
+
 - Welcome button triggers alert popup with "Welcome to SIT Nagpur!" message
 - Demonstrates inline JavaScript execution via `onclick` attribute
 - User interaction with the alert confirmation
 
 **Screenshot 3: Student Registration with Dynamic Data**
-![Registered student data in table demonstrating internal JavaScript](https://github.com/madhura-rew/Javascript/raw/main/task%201/screenshot3.png)
+<img width="836" height="624" alt="Screenshot 2026-09-01 144715" src="https://github.com/user-attachments/assets/61194f17-3c00-496f-9b81-17911372d74f" />
+
 - Registered Students table displays dynamically added entries
 - Shows student entry: Name: "Madhura", Roll No: "37", Course: "Btech"
 - Demonstrates successful form validation and dynamic DOM manipulation
