@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sparkle Tasks 🎀</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Tangerine&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+
+<body>
+  <div class="container">
+    <h1>✨ Sparkle Tasks ✨</h1>
+     <p id="greeting" class="greeting"></p>
+
+    <div class="input-area">
+      <input type="text" id="taskInput" placeholder="꒰ᐢ. .ᐢ꒱ Add a cute task..." />
+      <button onclick="addTask()">Add +</button>
+    </div>
+
+    <ul id="taskList"></ul>
+  </div>
+
+ 
+  <script>
+window.onload = function () {
+  const saved = JSON.parse(localStorage.getItem("sparkleTasks")) || [];
+  saved.forEach(task => {
+    createTask(task.text, task.checked, task.subtasks || []);
+  });
+  
+};
+
+function addTask() {
+  const input = document.getElementById("taskInput");
+  const taskText = input.value.trim();
+  if (taskText !== "") {
+    createTask(taskText, false, []);
+    saveTask(taskText);
+    input.value = "";
+    triggerSparkle();
+  }
+}
+function addTask() {
+  const input = document.getElementById("taskInput");
+  const taskText = input.value.trim();
+
+  if (taskText === "") {
+    alert("Please write a task before adding! (◕‿◕)");
+    input.focus();
+    return;
+  }
+
+  createTask(taskText, false, []);
+  saveTask(taskText);
+  input.value = "";
+  triggerSparkle();
+}
+function createTask(taskText, isChecked = false, subtasks = []) {
+  const list = document.getElementById("taskList");
+  const item = document.createElement("li");
+
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.checked = isChecked;
+  checkbox.className = "task-checkbox";
+
+  const text = document.createElement("span");
+  text.innerHTML = `🎀 ${taskText}`;
+  text.className = "task-text";
+  if (isChecked) text.classList.add("checked");
+
+  checkbox.onchange = () => {
+    text.classList.toggle("checked");
+    updateChecked(taskText, checkbox.checked);
+  };
+
+  const delBtn = document.createElement("span");
+delBtn.innerText = "✖";
+delBtn.className = "delete";
+delBtn.onclick = () => {
+  list.removeChild(item);
+  deleteTask(taskText);
+};
+
+const editBtn = document.createElement("button");
+editBtn.innerText = "✎";
+editBtn.className = "edit";
+editBtn.onclick = () => {
+  const newText = prompt("Edit task:", taskText);
+  if (newText !== null && newText.trim() !== "") {
+    const trimmed = newText.trim();
+    if (trimmed !== taskText) {
+      // Update UI
+      text.innerHTML = `🎀 ${trimmed}`;
+      taskText = trimmed; // update local reference if needed
+
+      // Update storage
+      updateTaskText(taskText, trimmed);
+    }
+  }
+};
+
+// ... rest of your code
+  const subtaskList = document.createElement("ul");
+  subtaskList.className = "subtask-list";
+
+  subtasks.forEach(st => {
+    const subItem = createSubtask(taskText, st.text, st.checked);
+    subtaskList.appendChild(subItem);
+  });
+
+  const subBtn = document.createElement("button");
+  subBtn.innerText = "+ Subtask";
+  subBtn.className = "subtask-btn";
+  subBtn.onclick = () => {
+    subBtn.onclick = () => {
+  // Check if subtask input already exists to avoid duplication
+  if (item.querySelector(".subtask-input")) return;
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = "Write subtask ୨୧...";
+  input.className = "subtask-input";
+
+  const addSubBtn = document.createElement("button");
+  addSubBtn.innerText = "Add";
+  addSubBtn.className = "add-sub-btn";
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "subtask-wrapper";
+  wrapper.appendChild(input);
+  wrapper.appendChild(addSubBtn);
+
+  item.appendChild(wrapper);
+
+  addSubBtn.onclick = () => {
+    const subText = input.value.trim();
+    if (subText !== "") {
+      const subItem = createSubtask(taskText, subText, false);
+      subtaskList.appendChild(subItem);
+      addSubtaskToStorage(taskText, subText);
+    }
+    wrapper.remove(); // Remove the input once added
+  };
+};
+
+  };
+
+ const contentWrapper = document.createElement("div");
+contentWrapper.className = "task-content";
+
+contentWrapper.appendChild(checkbox);
+contentWrapper.appendChild(text);
+
+const actions = document.createElement("div");
+actions.className = "task-actions";
+
+actions.appendChild(editBtn);
+
+actions.appendChild(subBtn);
+actions.appendChild(delBtn);
+
+contentWrapper.appendChild(actions);
+item.appendChild(contentWrapper);
+item.appendChild(subtaskList);
+list.appendChild(item);
+}
+
+function createSubtask(parentTask, subText, isChecked) {
+  const subItem = document.createElement("li");
+  subItem.className = "subtask";
+
+  const subCheckbox = document.createElement("input");
+  subCheckbox.type = "checkbox";
+  subCheckbox.checked = isChecked;
+
+  const subSpan = document.createElement("span");
+  subSpan.innerText = `⭐ ${subText}`;
+  if (isChecked) subSpan.classList.add("checked");
+
+  subCheckbox.onchange = () => {
+    subSpan.classList.toggle("checked");
+    updateSubtaskChecked(parentTask, subText, subCheckbox.checked);
+  };
+
+  const del = document.createElement("span");
+  del.innerText = "✖";
+  del.className = "delete";
+  del.onclick = () => {
+    subItem.remove();
+    deleteSubtaskFromStorage(parentTask, subText);
+  };
+
+  subItem.appendChild(subCheckbox);
+  subItem.appendChild(subSpan);
+  subItem.appendChild(del);
+
+  return subItem;
+}
+
+function saveTask(taskText) {
+  const saved = JSON.parse(localStorage.getItem("sparkleTasks")) || [];
+  saved.push({ text: taskText, checked: false, subtasks: [] });
+  localStorage.setItem("sparkleTasks", JSON.stringify(saved));
+}
+
+function deleteTask(taskText) {
+  let saved = JSON.parse(localStorage.getItem("sparkleTasks")) || [];
+  saved = saved.filter(task => task.text !== taskText);
+  localStorage.setItem("sparkleTasks", JSON.stringify(saved));
+}
+
+function updateChecked(taskText, isChecked) {
+  let saved = JSON.parse(localStorage.getItem("sparkleTasks")) || [];
+  saved = saved.map(task =>
+    task.text === taskText ? { ...task, checked: isChecked } : task
+  );
+  localStorage.setItem("sparkleTasks", JSON.stringify(saved));
+}
+
+function addSubtaskToStorage(taskText, subText) {
+  let saved = JSON.parse(localStorage.getItem("sparkleTasks")) || [];
+  saved = saved.map(task =>
+    task.text === taskText
+      ? {
+          ...task,
+          subtasks: [...(task.subtasks || []), { text: subText, checked: false }]
+        }
+      : task
+  );
+  localStorage.setItem("sparkleTasks", JSON.stringify(saved));
+}
+
+function deleteSubtaskFromStorage(taskText, subText) {
+  let saved = JSON.parse(localStorage.getItem("sparkleTasks")) || [];
+  saved = saved.map(task =>
+    task.text === taskText
+      ? {
+          ...task,
+          subtasks: task.subtasks.filter(st => st.text !== subText)
+        }
+      : task
+  );
+  localStorage.setItem("sparkleTasks", JSON.stringify(saved));
+}
+
+function updateSubtaskChecked(taskText, subText, isChecked) {
+  let saved = JSON.parse(localStorage.getItem("sparkleTasks")) || [];
+  saved = saved.map(task =>
+    task.text === taskText
+      ? {
+          ...task,
+          subtasks: task.subtasks.map(st =>
+            st.text === subText ? { ...st, checked: isChecked } : st
+          )
+        }
+      : task
+  );
+  localStorage.setItem("sparkleTasks", JSON.stringify(saved));
+}
+
+function triggerSparkle() {
+  const sparkle = document.createElement("div");
+  sparkle.classList.add("sparkle");
+  sparkle.textContent = "✨";
+  document.body.appendChild(sparkle);
+
+  setTimeout(() => {
+    sparkle.style.opacity = "0";
+    sparkle.style.transform = "translateY(-50px)";
+  }, 100);
+
+  setTimeout(() => sparkle.remove(), 1000);
+}
+</script>
+
+
+</body>
+</html>
