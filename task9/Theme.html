@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Theme Preferences</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #202020;
+            color: white;
+
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+
+            min-height: 100vh;
+            padding-top: 95px;
+
+            transition: 0.3s;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 40px;
+            font-weight: bold;
+        }
+
+        p {
+            font-size: 18px;
+            margin-top: 22px;
+            margin-bottom: 30px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        button {
+            padding: 13px 25px;
+            font-size: 18px;
+
+            background-color: #eeeeee;
+            color: #222;
+
+            border: 1px solid #aaa;
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background-color: #d8d8d8;
+        }
+
+        /* LIGHT THEME */
+
+        body.light {
+            background-color: #f5f5f5;
+            color: #222;
+        }
+
+        body.light button {
+            background-color: #ffffff;
+            color: #222;
+            border-color: #aaa;
+        }
+
+        /* DARK THEME */
+
+        body.dark {
+            background-color: #202020;
+            color: white;
+        }
+
+        body.dark button {
+            background-color: #eeeeee;
+            color: #222;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Theme Preferences</h1>
+
+        <p>
+            Using localStorage and sessionStorage to save user preferences.
+        </p>
+
+        <div class="buttons">
+
+            <button onclick="setLightTheme()">
+                Light Theme
+            </button>
+
+            <button onclick="setDarkTheme()">
+                Dark Theme
+            </button>
+
+            <button onclick="clearPreference()">
+                Clear Preference
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // Apply saved theme when page loads
+        window.onload = function () {
+
+            const savedTheme =
+                localStorage.getItem("theme") ||
+                sessionStorage.getItem("theme");
+
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            }
+        };
+
+
+        // LIGHT THEME
+        function setLightTheme() {
+
+            applyTheme("light");
+
+            // Save in localStorage
+            localStorage.setItem("theme", "light");
+
+            // Save in sessionStorage
+            sessionStorage.setItem("theme", "light");
+        }
+
+
+        // DARK THEME
+        function setDarkTheme() {
+
+            applyTheme("dark");
+
+            // Save in localStorage
+            localStorage.setItem("theme", "dark");
+
+            // Save in sessionStorage
+            sessionStorage.setItem("theme", "dark");
+        }
+
+
+        // APPLY THEME
+        function applyTheme(theme) {
+
+            document.body.classList.remove("light", "dark");
+
+            document.body.classList.add(theme);
+        }
+
+
+        // CLEAR PREFERENCE
+        function clearPreference() {
+
+            localStorage.removeItem("theme");
+            sessionStorage.removeItem("theme");
+
+            // Return to default dark theme
+            document.body.classList.remove("light", "dark");
+        }
+
+    </script>
+
+</body>
+</html>
