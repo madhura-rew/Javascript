@@ -137,6 +137,9 @@ JavaScript Web Applications - Grade Calculator and Password Validator
 </html>
 ```
 ## 4. Output
+<img width="573" height="436" alt="Screenshot 2026-09-21 161007" src="https://github.com/user-attachments/assets/60a23871-8882-4c8e-b458-ab8bc2ba4ccd" />
+<img width="738" height="561" alt="Screenshot 2026-09-21 160956" src="https://github.com/user-attachments/assets/cfe3b89c-646b-4f0f-873a-51c940f5398e" />
+
 ## 5. Case Study Title:
 Client-side password validation using JavaScript string methods and regular expressions.
 ## 6. Case Study Program Code:
@@ -188,6 +191,9 @@ Client-side password validation using JavaScript string methods and regular expr
 </html>
 ```
 ## 7. output
+<img width="598" height="616" alt="Screenshot 2026-09-21 161115" src="https://github.com/user-attachments/assets/f51d9ac8-023f-4d0f-a87d-eb3d76799ea3" />
+<img width="627" height="637" alt="Screenshot 2026-09-21 161208" src="https://github.com/user-attachments/assets/680c631f-5911-4163-88df-6dc78260b3e4" />
+
 ## 8. Result/conclusion
 Both programs were successfully designed, executed and tested in the browser. The Grade Evaluation System correctly maps numeric marks to letter grades using conditional branching and input validation, while the Password Validation System verifies strength criteria using regular expressions and provides real-time visual feedback. These experiments demonstrate the use of DOM manipulation, event handling, conditionals and string methods in client-side JavaScript.
 
