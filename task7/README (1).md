@@ -1,7 +1,7 @@
 # Experiment No. 7
 
-**Student Name:** Ishika Dubey
-**PRN:** 24070521023
+**Student Name:** Madhura Rewatkar
+**PRN:** 24070521037
 
 ---
 
@@ -35,7 +35,7 @@ Demonstrate JavaScript DOM event handling by building an interactive To-Do List 
 
 <head>
     <title>To Do List</title>
-    <h1>Ishika Dubey 24070521023 </h1>
+    
 
     <style>
         body {
