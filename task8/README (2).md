@@ -1,7 +1,6 @@
 # Experiment No. 8
 
-**Student Name:** Ishika Dubey
-**PRN:** 24070521023
+
 
 ---
 
