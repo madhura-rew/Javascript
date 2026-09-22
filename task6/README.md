@@ -1,7 +1,7 @@
 # Experiment No. 6
 
-**Student Name:** Ishika Dubey
-**PRN:** 24070521023
+**Student Name:** Madhura Rewatkar
+**PRN:** 24070521037
 
 ---
 
