@@ -1,0 +1,21 @@
+[
+	{
+		"id":1,
+		"name":"Madhura Rewatkar",
+		"department":"CSE",
+		"marks":99
+	},
+	{
+		"id":2,
+		"name":"Katherine Petrova",
+		"department":"ECE",
+		"marks":87
+	},
+	{
+		"id":3,
+		"name":"Sai Chaddha",
+		"department":"Aerospace",
+		"marks": 92
+	}
+
+]
