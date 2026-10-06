@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Restaurant Order Manager</title>
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        button {
+            display: block;
+            margin: 0 auto 20px;
+            padding: 12px 30px;
+            font-size: 16px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #c0392b;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 90%;
+            margin: 0 auto;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .summary {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: white;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary p {
+            font-size: 18px;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .summary span {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>🍽️ Restaurant Order Manager</h1>
+    <button id="viewOrdersBtn">View Orders</button>
+
+    <table id="ordersTable" class="hidden">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer Name</th>
+                <th>Food Item</th>
+                <th>Quantity</th>
+                <th>Total Amount</th>
+                <th>Order Status</th>
+            </tr>
+        </thead>
+        <tbody id="ordersBody">
+        </tbody>
+    </table>
+
+    <div id="summary" class="summary hidden">
+        <p>Total Number of Orders: <span id="totalOrders">0</span></p>
+        <p>Total Sales Amount: $<span id="totalSales">0.00</span></p>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#viewOrdersBtn").click(function() {
+                $.getJSON("orders.json", function(data) {
+                    $("#ordersBody").empty();
+                    var totalOrders = 0;
+                    var totalSales = 0;
+
+                    $.each(data, function(index, order) {
+                        // Prevent duplicate rows
+                        var orderExists = $("#ordersBody tr[data-order-id='" + order.order_id + "']").length > 0;
+                        if (orderExists) {
+                            return; // skip this iteration
+                        }
+
+                        // Append row with data attribute for duplicate checking
+                        $("#ordersBody").append(
+                            "<tr data-order-id='" + order.order_id + "'>" +
+                                "<td>" + order.order_id + "</td>" +
+                                "<td>" + order.customer_name + "</td>" +
+                                "<td>" + order.food_item + "</td>" +
+                                "<td>" + order.quantity + "</td>" +
+                                "<td>$" + parseFloat(order.total_amount).toFixed(2) + "</td>" +
+                                "<td>" + order.order_status + "</td>" +
+                            "</tr>"
+                        );
+
+                        totalOrders++;
+                        totalSales += parseFloat(order.total_amount);
+                    });
+
+                    // Display summary
+                    $("#totalOrders").text(totalOrders);
+                    $("#totalSales").text(totalSales.toFixed(2));
+
+                    // Show table and summary
+                    $("#ordersTable").removeClass("hidden");
+                    $("#summary").removeClass("hidden");
+                }).fail(function() {
+                    alert("Error loading orders. Please try again.");
+                });
+            });
+        });
+    </script>
+</body>
+</html>
