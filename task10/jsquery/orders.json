@@ -1,0 +1,7 @@
+[
+  {"order_id": "101", "customer_name": "John Smith", "food_item": "Margherita Pizza", "quantity": "2", "total_amount": "24.00", "order_status": "Preparing"},
+  {"order_id": "102", "customer_name": "Sarah Johnson", "food_item": "Caesar Salad", "quantity": "1", "total_amount": "12.50", "order_status": "Ready"},
+  {"order_id": "103", "customer_name": "Mike Davis", "food_item": "Spaghetti Carbonara", "quantity": "3", "total_amount": "36.00", "order_status": "Delivered"},
+  {"order_id": "104", "customer_name": "Emily Wilson", "food_item": "Chicken Tacos", "quantity": "4", "total_amount": "28.00", "order_status": "Preparing"},
+  {"order_id": "105", "customer_name": "David Brown", "food_item": "Fish and Chips", "quantity": "2", "total_amount": "22.00", "order_status": "Ready"}
+]
